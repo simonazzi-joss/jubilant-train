@@ -46,6 +46,8 @@ class Api {
     var client = http.Client();
     final response = await client.get(this._getNewsUrl());
 
+    print(response.body);
+
     return await compute(_parseArticle, response.body);
   }
 

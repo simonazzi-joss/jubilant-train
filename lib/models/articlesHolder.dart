@@ -10,6 +10,7 @@ class ArticlesHolder extends ChangeNotifier {
 
   ArticlesHolder() {
     this._api = new Api();
+    this.refresh(null);
   }
 
   set articles(List<Article> news) {
@@ -21,5 +22,8 @@ class ArticlesHolder extends ChangeNotifier {
   }
   List<Article> get articles => this._articles;
 
-  void refresh(context) => this._api.getArticles(context);
+  void refresh(context) {
+    // this._api.getArticles(context);
+    this._api.getArticles(context).then((val) => this.articles = val);
+  }
 }
