@@ -1,29 +1,34 @@
-import 'package:coolapp/models/article.dart';
-import 'package:coolapp/services/api.dart';
-import 'package:flutter/material.dart';
+// import 'package:coolapp/models/article.dart';
+// import 'package:coolapp/services/api.dart';
+// import 'package:flutter/material.dart';
 
-class ArticlesHolder extends ChangeNotifier {
+// class ArticlesHolder extends ChangeNotifier {
+//   final List<Article> _topNews = [];
+//   final List<Article> _tecNews = [];
 
-  final List<Article> _articles = [];
+//   ArticlesHolder() {
+//     Api().getArticles('technology').then((value) => topNews = value);
+//   }
 
-  Api _api;
+//   set topNews(List<Article> news) {
+//     assert(news != null);
 
-  ArticlesHolder() {
-    this._api = new Api();
-    this.refresh(null);
-  }
+//     _topNews.clear();
+//     _topNews.addAll(news);
+//     notifyListeners();
+//   }
 
-  set articles(List<Article> news) {
-    assert(news != null);
+//   set tecnologyNews(List<Article> news) {
+//     assert(news != null);
 
-    _articles.clear();
-    _articles.addAll(news);
-    notifyListeners();
-  }
-  List<Article> get articles => this._articles;
+//     _tecNews.clear();
+//     _tecNews.addAll(news);
+//     notifyListeners();
+//   }
 
-  void refresh(context) {
-    // this._api.getArticles(context);
-    this._api.getArticles(context).then((val) => this.articles = val);
-  }
-}
+//   // deprecated
+//   List<Article> get articles => [];
+
+//   List<Article> get topNews => this._topNews;
+//   List<Article> get tecnologyNews => this._tecNews;
+// }

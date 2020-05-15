@@ -1,74 +1,68 @@
-// import 'dart:convert';
-// import 'package:flutter/foundation.dart';
-// import 'package:coolapp/models/article.dart';
-// import 'package:http/http.dart' as http;
-
-// const String API = 'http://newsapi.org/v2/';
-// const String TOP = 'top-headlines';
-// const String TOKEN = '5920fbb42d194ec9be1500b5094ed123';
-
-// class Api {
-//   Future<List<Article>> getInitialArticle() async {
-//     var client = new http.Client();
-//     final response =
-//       await client.get(_buildUrl(TOP));
-//       return await compute(_parseArticle, response.body);
-//   }
-//   Future<List<Article>> getArticles() async {
-//     var client = new http.Client();
-//     final response = await client.get(_buildUrl(TOP));
-
-//     return await compute(_parseArticle, response.body);
-//   }
-//   static List<Article> _parseArticle(String responseBody) {
-//     final parsed = json.decode(responseBody);
-//     return parsed['articles'].map<Article>((json) => Article.fromJson(json)).toList();
-//   }
-//   _buildUrl(String endpoint) {
-//     return '$API$endpoint?country=it&apiKey=$TOKEN';
-//   }
-// }
-
-import 'dart:convert';
-
 import 'package:coolapp/models/article.dart';
-import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
+import 'package:dio_flutter_transformer/dio_flutter_transformer.dart';
+import 'package:dio_http_cache/dio_http_cache.dart';
 
 class Api {
-  static final String _apiKey = '21262fa8dec0458a8d2e3b53d5719446';
+  static const String _apiKey = '21262fa8dec0458a8d2e3b53d5719446';
+  static const String _API = 'http://newsapi.org/v2/';
+  static const String _TOP = 'top-headlines';
 
+  final Dio dio = Dio();
+  final DioCacheManager dioCache = DioCacheManager(CacheConfig(baseUrl: _API));
 
-  String _getNewsUrl({sort = 'publishedAt'}) => 'http://newsapi.org/v2/everything?q=bitcoin&from=2020-03-10&sortBy=$sort&apiKey=$_apiKey';
+  Api() {
+    dio.options.baseUrl = _API;
+    dio.options.connectTimeout = 5000;
+    dio.transformer = FlutterTransformer();
+    dio.interceptors.add(dioCache.interceptor);
+    dio.interceptors
+        .add(InterceptorsWrapper(onRequest: (RequestOptions options) async {
+      // Do something before request is sent
+      options.queryParameters['apiKey'] = _apiKey;
+      options.queryParameters['country'] = 'it';
 
+      if (options.extra.isNotEmpty) {
+        options.queryParameters.addAll(options.extra);
+      }
 
-  Future<List<Article>> getArticles(context) async {
-    var client = http.Client();
-    final response = await client.get(this._getNewsUrl());
-
-    print(response.body);
-
-    return await compute(_parseArticle, response.body);
+      return options;
+    }, onResponse: (Response response) async {
+      // Do something with response data
+      return response; // continue
+    }, onError: (DioError e) async {
+      // Do something with response error
+      print(e);
+      return e; //continue
+    }));
   }
 
-  /*
-   * Per quando riuscirò a far funzionare il refresh :D
-   * 
-    Future<void> getArticles(context) async {
-      ArticlesHolder tmp = Provider.of<ArticlesHolder>(context);
-      http.Client client = http.Client();
-      http.Response response = await client.get(this._getNewsUrl());
-      
-      tmp.articles = await compute(_parseArticle, response.body);
+  Future<List<Article>> getArticles(
+    String category,
+  ) async {
+    Response response = await dio.get(
+      _TOP,
+      options: this._createOptions(category: category, query: null),
+    );
+
+    return response.data['articles']
+        .map<Article>((json) => Article.fromJson(json))
+        .toList();
+  }
+
+  Options _createOptions({
+    String category,
+    String query,
+  }) {
+    Options options = buildCacheOptions(Duration(seconds: 30));
+
+    if (category != null) {
+      options.extra['category'] = category;
     }
-  */
+    if (query != null) {
+      options.extra['q'] = query;
+    }
 
-  static List<Article> _parseArticle(String responseBody) {
-    final parsed = json.decode(responseBody);
-
-    return parsed['articles'].map<Article>((json) => Article.fromJson(json)).toList();
+    return options;
   }
-
-
-
 }
