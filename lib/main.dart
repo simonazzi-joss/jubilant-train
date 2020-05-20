@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:coolapp/models/article.dart';
 import 'package:coolapp/screens/bimby.dart';
+import 'package:coolapp/screens/bimbyAoo.dart';
+import 'package:coolapp/screens/esercitazione2.dart';
+import 'package:coolapp/screens/googleMapsEx.dart';
 import 'package:coolapp/screens/news.dart';
 import 'package:coolapp/screens/testAnimation.dart';
 import 'package:coolapp/services/dbRepo.dart';
@@ -14,6 +17,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'services/api.dart';
+import 'package:flutter_google_maps/flutter_google_maps.dart';
 
 const String NewsBox = 'NewsBox';
 
@@ -24,6 +28,8 @@ void main() async {
 
   await Hive.openBox<Article>(NewsBox);
   await Hive.openBox<Article>('pippo');
+
+  GoogleMap.init('AIzaSyDxHs6r4FXyr3P1bF4ZqNO2ZdOSXQc7WzM');
 
   runApp(MyApp());
 }
@@ -39,13 +45,16 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Definitely not GoogleNews',
         theme: appTheme,
-        initialRoute: '/',
+        initialRoute: '/bimby',
         routes: {
-          // '/': (context) => News(),
+          '/': (context) => News(),
           '/search': (context) => null,
-          // '/': (context) => StackExample(),
-          // '/': (context) => TestAnimations(),
-          '/': (context) => Bimby(title: ':D'),
+          // '/stack': (context) => StackExample(),
+          '/animation': (context) => TestAnimations(),
+          '/bimbyExample': (context) => Bimby(title: ':D'),
+          '/todoExambple': (context) => TodoHomeOnePage(),
+          '/googleExample': (context) => GoogleMapsEx(),
+          '/bimby': (context) => BimbyApp(),
         },
       ),
     );
