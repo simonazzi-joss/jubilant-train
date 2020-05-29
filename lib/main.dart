@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:coolapp/models/article.dart';
-import 'package:coolapp/screens/bimby.dart';
-import 'package:coolapp/screens/bimbyAoo.dart';
-import 'package:coolapp/screens/esercitazione2.dart';
-import 'package:coolapp/screens/googleMapsEx.dart';
-import 'package:coolapp/screens/news.dart';
-import 'package:coolapp/screens/testAnimation.dart';
+// import 'package:coolapp/screens/bimby.dart';
+import 'package:coolapp/screens/bimbyApp.dart';
+import 'package:coolapp/screens/bimbyDetail.dart';
+// import 'package:coolapp/screens/esercitazione2.dart';
+// import 'package:coolapp/screens/googleMapsEx.dart';
+// import 'package:coolapp/screens/news.dart';
+// import 'package:coolapp/screens/testAnimation.dart';
 import 'package:coolapp/services/dbRepo.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -45,16 +46,18 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Definitely not GoogleNews',
         theme: appTheme,
-        initialRoute: '/bimby',
+        initialRoute: '/',
         routes: {
-          '/': (context) => News(),
-          '/search': (context) => null,
-          // '/stack': (context) => StackExample(),
-          '/animation': (context) => TestAnimations(),
-          '/bimbyExample': (context) => Bimby(title: ':D'),
-          '/todoExambple': (context) => TodoHomeOnePage(),
-          '/googleExample': (context) => GoogleMapsEx(),
-          '/bimby': (context) => BimbyApp(),
+          // '/': (context) => News(),
+          // '/search': (context) => null,
+          // // '/stack': (context) => StackExample(),
+          // '/animation': (context) => TestAnimations(),
+          // '/bimbyExample': (context) => Bimby(title: ':D'),
+          // '/todoExambple': (context) => TodoHomeOnePage(),
+          // '/googleExample': (context) => GoogleMapsEx(),
+          //
+          '/': (context) => BimbyApp(),
+          '/bimbyPage2': (context) => BimbyDetail(),
         },
       ),
     );

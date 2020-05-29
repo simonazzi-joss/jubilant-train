@@ -41,37 +41,38 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final bloc = Provider.of<NewsBloc>(context);
     return SafeArea(
-        child: Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "NEWS",
-          style: Theme.of(context).textTheme.headline1,
-        ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(12.0),
-          child: StreamBuilder<AppScreen>(
-            stream: bloc.actualScreen,
-            builder: (context, AsyncSnapshot<AppScreen> snapshot) {
-              return topBar(snapshot.data);
-            },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "NEWS",
+            style: Theme.of(context).textTheme.headline1,
+          ),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(12.0),
+            child: StreamBuilder<AppScreen>(
+              stream: bloc.actualScreen,
+              builder: (context, AsyncSnapshot<AppScreen> snapshot) {
+                return topBar(snapshot.data);
+              },
+            ),
           ),
         ),
+        body: NewsList(),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.chrome_reader_mode),
+              title: Text('Notizie'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.favorite_border),
+              title: Text('Preferiti'),
+            ),
+          ],
+          onTap: (index) => bloc.changeScreen(index),
+        ),
       ),
-      body: NewsList(),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chrome_reader_mode),
-            title: Text('Notizie'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            title: Text('Preferiti'),
-          ),
-        ],
-        onTap: (index) => bloc.changeScreen(index),
-      ),
-    ));
+    );
   }
 
   void _handleTabSelection() async {
@@ -113,7 +114,8 @@ class NewsList extends StatelessWidget {
           if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data.length,
-              itemBuilder: (context, position) => CardNews(snapshot.data[position]),
+              itemBuilder: (context, position) =>
+                  CardNews(snapshot.data[position]),
             );
           } else {
             return CircularProgressIndicator();
